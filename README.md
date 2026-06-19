@@ -31,7 +31,7 @@ DATABASE_URL=postgresql://user:password@host:port/dbname
 JWT_SECRET=your-secret-key
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=your-password
-FRONTEND_URL=https://techop.vercel.app
+FRONTEND_URL=https://techshopge.vercel.app
 ```
 
 ## გაშვება
